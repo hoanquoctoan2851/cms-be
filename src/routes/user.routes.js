@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const user_controller_1 = require("../controller/user.controller");
+const permissionUser_1 = __importDefault(require("../middleware/user/permissionUser"));
+const validateResource_1 = __importDefault(require("../middleware/validateResource"));
+const shared_schema_1 = require("../schema/shared.schema");
+const user_schema_1 = require("./../schema/user.schema");
+const permissionTeacher_1 = __importDefault(require("../middleware/teacher.ts/permissionTeacher"));
+const router = express_1.default.Router();
+router.get("/api/users", [permissionUser_1.default, (0, validateResource_1.default)(shared_schema_1.queryGetListSchema)], user_controller_1.getListUsers);
+router.get("/api/user/:msv", [permissionUser_1.default, (0, validateResource_1.default)(user_schema_1.getUserMsvSchema)], user_controller_1.getUserByMsv);
+router.post("/api/users", [permissionUser_1.default, (0, validateResource_1.default)(user_schema_1.createUserSchema)], user_controller_1.createUserHandler);
+router.post("/api/create-list-user", [permissionUser_1.default], user_controller_1.createListUserHandler);
+router.put("/api/users/changePassword", [permissionUser_1.default, (0, validateResource_1.default)(user_schema_1.changePasswordUpdateSchema)], user_controller_1.changePasswordUser);
+router.put("/api/users/:msv", [permissionUser_1.default, (0, validateResource_1.default)(user_schema_1.updateUserSchema)], user_controller_1.updateUser);
+router.put("/api/users/balance/:msv", [permissionTeacher_1.default, (0, validateResource_1.default)(user_schema_1.deleteUserSchema)], user_controller_1.depositUser);
+router.delete("/api/users/:msv", [permissionUser_1.default, (0, validateResource_1.default)(user_schema_1.deleteUserSchema)], user_controller_1.deleteUser);
+router.get("/api/users/:msv/allLetter", [permissionUser_1.default, (0, validateResource_1.default)(user_schema_1.getAllLetterRequestSchema)], user_controller_1.getAllLetter);
+exports.default = router;
